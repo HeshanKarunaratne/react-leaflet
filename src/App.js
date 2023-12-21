@@ -1,8 +1,10 @@
 import React from 'react';
 import './App.css';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, Popup, FeatureGroup } from 'react-leaflet';
 import { useState } from 'react';
+import 'leaflet-draw/dist/leaflet.draw.css';
+import { EditControl } from 'react-leaflet-draw';
 
 function App() {
 
@@ -18,6 +20,11 @@ function App() {
     console.log("clicked in ", lat, lng)
     setMapZoom(13);
     setMapCenter([lat, lng]);
+  };
+
+  const onCreated = (e) => {
+    // Handle the created polygon data
+    console.log(e);
   };
 
   console.log("zoom:", mapZoom);
@@ -39,11 +46,25 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
         {locations.map((location) => (
           <Marker key={location.id} position={[location.lat, location.lng]}>
             <Popup>{location.name}</Popup>
           </Marker>
         ))}
+
+        <FeatureGroup>
+          <EditControl
+            position="topright"
+            // onCreated={onCreated}
+            draw={{
+              rectangle: false,
+              circle: false,
+              marker: false,
+            }}
+          />
+        </FeatureGroup>
+
       </MapContainer>
     </>
   );
